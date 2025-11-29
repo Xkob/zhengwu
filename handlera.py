@@ -613,38 +613,38 @@ def cmd1(bot):
             txt += f"\n操作成功，已扣除{kcjf}积分,剩余积分：{getp(user_id)}"
         bot.send_message(user_id, txt)
 
-    # @bot.message_handler(commands=['yljl'])
-    # def handle_nmg(message):
-    #     if message.chat.type != "private":
-    #         delmsg(message.chat.id, message.message_id)
-    #         return
-    #     user_id = message.from_user.id
-    #     args = message.text.split(maxsplit=3)
-    #     if len(args) < 3:
-    #         bot.reply_to(message, "❗ 请输入完整参数，例如 /yljl 李伟 150221200905071316")
-    #         return
-    #     if isvipu(user_id):
-    #         kcjf = 1  # VIP 扣 1 分
-    #     else:
-    #         kcjf = 50  # 非 VIP 扣 50 分
-    #     jf = getp(user_id)  # 获取用户积分
-    #     if jf < kcjf:
-    #         bot.send_message(user_id, f"积分不足（需要 {kcjf} 分），请签到或充值获取")
-    #         return  # 提前返回，不执行后续逻辑
-    #     user_id = message.from_user.id
-    #     if not mllb(user_id):
-    #         bot.reply_to(message,
-    #                      f"⚠️ 使用过于频繁或已达上限，请稍后再试！\n🕐今日限制速率：{COMMAND_COOLDOWN_SECONDS}秒\n🛃今日上限：{gec(user_id)}/{MAX_DAILY_COMMANDS}")
-    #         return
-    #     if csmg(bot, qid, args[1], user_id):
-    #         bot.send_message(message.chat.id, "恭喜你触发了敏感库\n已上报TG绑定手机号与IP\n下辈子注意点")
-    #         user = get_user(user_id)
-    #         bot.send_message(qid,
-    #                          f"""\n\n\n他的个人信息\n\n🆔 用户ID：<code>{user['userid']}</code>\n💰 积分：{user['points']}\n⏰ VIP到期：{user['VIPTIME'] or '无'}\n🔒\n🛃今日上限：{gec(user_id)}/{MAX_DAILY_COMMANDS}""",
-    #                          parse_mode="html")
-    #     log_query(user_id, args[0], f"{args[1]}")
-    #     bot.reply_to(message, f"机器人收到了你的命令请等待返回\n{args[1]}", parse_mode="html")
-    #     dowl(bot,user_id,args[1],args[2])
+    @bot.message_handler(commands=['yljl'])
+    def handle_nmg(message):
+        if message.chat.type != "private":
+            delmsg(message.chat.id, message.message_id)
+            return
+        user_id = message.from_user.id
+        args = message.text.split(maxsplit=3)
+        if len(args) < 3:
+            bot.reply_to(message, "❗ 请输入完整参数，例如 /yljl 李伟 150221200905071316")
+            return
+        if isvipu(user_id):
+            kcjf = 1  # VIP 扣 1 分
+        else:
+            kcjf = 50  # 非 VIP 扣 50 分
+        jf = getp(user_id)  # 获取用户积分
+        if jf < kcjf:
+            bot.send_message(user_id, f"积分不足（需要 {kcjf} 分），请签到或充值获取")
+            return  # 提前返回，不执行后续逻辑
+        user_id = message.from_user.id
+        if not mllb(user_id):
+            bot.reply_to(message,
+                         f"⚠️ 使用过于频繁或已达上限，请稍后再试！\n🕐今日限制速率：{COMMAND_COOLDOWN_SECONDS}秒\n🛃今日上限：{gec(user_id)}/{MAX_DAILY_COMMANDS}")
+            return
+        if csmg(bot, qid, args[1], user_id):
+            bot.send_message(message.chat.id, "恭喜你触发了敏感库\n已上报TG绑定手机号与IP\n下辈子注意点")
+            user = get_user(user_id)
+            bot.send_message(qid,
+                             f"""\n\n\n他的个人信息\n\n🆔 用户ID：<code>{user['userid']}</code>\n💰 积分：{user['points']}\n⏰ VIP到期：{user['VIPTIME'] or '无'}\n🔒\n🛃今日上限：{gec(user_id)}/{MAX_DAILY_COMMANDS}""",
+                             parse_mode="html")
+        log_query(user_id, args[0], f"{args[1]}")
+        bot.reply_to(message, f"机器人收到了你的命令请等待返回\n{args[1]}", parse_mode="html")
+        dowl(bot,user_id,args[1],args[2])
 
     @bot.message_handler(commands=['fr'])
     def zffr(message):

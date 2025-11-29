@@ -2,47 +2,28 @@ import requests
 import os
 from dbsql import adp, getp, isvipu
 
-def dowl(bot, userid, name, idcard):
-    """
-    调用接口查询并下载图片结果，再发给 Telegram 用户。
-    如果返回的不是图片或内容为空则提示“结果为空”。
-    """
-    url = "http://43.251.117.173:1013/yl"
+def dowl(bot,userid, name, idcard):
+    url = "http://154.64.230.27:8080/yljl"
     params = {
-        "name": name,
+        "xm": name,
         "sfz": idcard,
-        "key": "3a77c673465b4fa3"
+        "key":"sanqiuchadang"
     }
 
     try:
         resp = requests.get(url, params=params, timeout=60)
-        resp.raise_for_status()
-
-        content_type = resp.headers.get("Content-Type", "")
-
-        # 检查是否为图片
-        if "image" not in content_type:
-            bot.send_message(userid, "查询结果为空")
-            return "空"
-
-        # 检查大小
-        if len(resp.content) < 1024:
-            bot.send_message(userid, "查询结果为空")
-            return "空"
-
-        # 保存并发送图片
-        ext = content_type.split("/")[-1].split(";")[0] or "png"
-        filename = f"{name}_{idcard}.{ext}"
-        with open(filename, "wb") as f:
-            f.write(resp.content)
-
-        with open(filename, "rb") as f:
-            bot.send_document(userid, f, caption=f"{name}（{idcard}）查询结果")
-
+        if '"code":0' in resp.text:
+            bot.send_message(userid, "查询失败查询为空")
+        if "success" in resp.text:
+            bot.send_message(userid, "查询为空")
+        if "记录" not in resp.text:
+            bot.send_message(userid, "消息格式化失败 尝试重新查询")
+        filename = f"{idcard}.txt"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(resp.text+"\n查询来源 一诺政务机器人 @xhgzw")
+        bot.send_document(userid, open(filename, "rb"), caption=f"{name} 的查询结果")
         os.remove(filename)
-
-        # 积分逻辑
-        if not isvipu(userid):  # 非VIP扣积分
+        if not isvipu(userid):
             kcjf = 50
             adp(userid, -kcjf)
             bot.send_message(userid, f"已扣除 {kcjf} 积分")

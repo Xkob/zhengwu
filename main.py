@@ -25,6 +25,8 @@ from dbsql import checkqd,generate_unique_random_amount,getqd,get_vip_level,is_t
 from dbsql import clear_user_qd,user_info,adusdt,getusdt
 from kh.cfg2 import user_jobs,refresh_token,worker
 
+import logging
+logging.getLogger("mysql.connector").setLevel(logging.WARNING)
 
 
 _background_loop = asyncio.new_event_loop()
